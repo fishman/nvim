@@ -13,11 +13,24 @@ call dein#begin('/home/timebomb/.config/nvim')
 " Required:
 call dein#add('Shougo/dein.vim')
 
+call dein#add('jceb/vim-orgmode')
+call dein#add('mattn/calendar-vim')
+call dein#add('vim-scripts/SyntaxRange')
+call dein#add('vim-scripts/utl.vim')
+call dein#add('chrisbra/NrrwRgn')
+call dein#add('Matt-Deacalion/vim-systemd-syntax')
+
+call dein#add('godlygeek/tabular')
+call dein#add('plasticboy/vim-markdown')
+" call dein#add('rhysd/nyaovim-markdown-preview')
+
+call dein#add('tpope/vim-speeddating')
 call dein#add('tpope/vim-repeat')
 call dein#add('tpope/vim-surround')
 call dein#add('tpope/vim-commentary')
 call dein#add('tpope/vim-fugitive')
 call dein#add('tpope/vim-rhubarb')
+call dein#add('tpope/vim-endwise')
 call dein#add('tpope/vim-vinegar')
 call dein#add('tpope/vim-rails')
 call dein#add('vim-ruby/vim-ruby')
@@ -32,8 +45,9 @@ call dein#add('Shougo/neosnippet-snippets')
 
 call dein#add('Shougo/deoplete.nvim')
 call dein#add('zchee/deoplete-clang')
-call dein#add('zchee/deoplete-jedi')
-
+" call dein#add('zchee/deoplete-jedi')
+" call dein#add('carlitux/deoplete-ternjs')
+" call dein#add('vhakulinen/neovim-intellij-complete-deoplete')
 
 call dein#add('morhetz/gruvbox')
 
@@ -46,7 +60,8 @@ call dein#add('pbogut/fzf-mru.vim', { 'depends': 'fzf.vim' })
 
 call dein#add('neomake/neomake')
 call dein#add('vim-airline/vim-airline')
-
+call dein#add('neovim/node-host', { 'build': 'npm install' })
+call dein#add('vimlab/mdown.vim', { 'build': 'npm install' })
 
 " Required:
 call dein#end()
@@ -117,6 +132,7 @@ set ignorecase
 set smartcase           " the case of normal letters is ignored except when upper is used
 set hlsearch            " highlight all searched for phrases
 set incsearch           " highlight where the typed pattern matches
+set inccommand=nosplit
 set nu
 set rnu
 "set novisualbell        " use visual bell instead of beeping
@@ -142,6 +158,9 @@ nmap <leader>fd :se ff=dos<cr>
 nmap <leader>fu :se ff=unix<cr>
 set background=dark
 
+" Markdown
+let g:vim_markdown_math = 1
+
 let g:airline#extensions#tabline#enabled = 2
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#left_sep = ' '
@@ -157,34 +176,56 @@ let g:airline_theme= 'gruvbox'
 let g:deoplete#sources#clang#libclang_path ='/usr/lib/libclang.so'
 let g:deoplete#sources#clang#clang_header = '/usr/include/clang'
 
+let g:neomake_c_lint_maker = {
+      \ 'exe': 'lint',
+      \ 'args': ['--option', 'x'],
+      \ 'errorformat': '%f:%l:%c: %m',
+      \ }
+
+autocmd BufWritePost *.py,*.js,*.rs Neomake
+let g:neomake_javascript_enabled_makers = ['eslint']
+
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
 "
 
-let mapleader = ","     " set mapleader, then <leader> will be ,
-let g:mapleader = ","
+let mapleader = " "     " set mapleader, then <leader> will be ,
+let g:mapleader = " "
 let maplocalleader = ","     " set mapleader, then <leader> will be ,
 
+map <right> :bn<cr>
+map <left> :bp<cr>
+nnoremap <up> gk
+nnoremap <down> gj
+
 map <leader>e :e! $MYVIMRC<cr>
+map <silent> <leader>fed :e $MYVIMRC<cr>
 au! BufWritePost init.vim source $MYVIMRC
 
+nmap <silent> <leader>fs :w<cr>
 map <silent> <leader>s :w!<cr>
 nmap <F1> :w!<cr>
 imap <F1> <C-O>:w!<cr>
 
+map <silent> \ :nohl<cr>
+
 nmap <F3> :NERDTreeToggle<cr>
 imap <F3> <C-O>:NERDTreeToggle<cr>
+nmap <silent> \\ :execute 'NERDTreeToggle ' . fnameescape(getcwd())<CR>
+nmap <silent> <leader>nf :NERDTreeFind<CR>
+" let g:NERDTreeHijackNetrw = 0
 
 nmap <F4> :TagbarToggle<cr>
 imap <F4> <C-O>:TagbarToggle<cr>
 
 let g:fzf_command_prefix = 'Fzf'
 noremap <f8> :FzfAg<CR>
+noremap <silent> <leader>p/ :FzfAg<CR>
 noremap <silent> <leader>t :FzfAg<CR>
-noremap <silent> <leader>r :FZFMru<CR>
+noremap <silent> <leader>fr :FZFMru<CR>
 
-map <leader>bc :Bclose<cr>
+map <leader>bd :Bclose<cr>
 map <leader>bw :bw<cr>
 
 nnoremap <C-h> <C-w>h " only C-h does not work.
@@ -192,6 +233,32 @@ nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+augroup development
+    autocmd!
+
+    autocmd Filetype org nmap <buffer> <A-Left>  :hello<cr>
+    autocmd Filetype org nmap <buffer> <A-Right> :hello<cr>
+augroup END
+
+" SuperTab like snippets' behavior.
+imap <expr><TAB>
+ \ pumvisible() ? "\<C-n>" :
+ \ neosnippet#expandable_or_jumpable() ?
+ \    "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+ \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 concealcursor=nv
+endif
+
+	" Enable snipMate compatibility feature.
+	" let g:neosnippet#enable_snipmate_compatibility = 1
 " use jk for esc
 imap jk <Esc>
 
@@ -200,6 +267,9 @@ noremap <leader>dos mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
 " remove indenting on empty lines
 map <F2> :%s/\s*$//g<cr>:noh<cr>''
+
+" switch to current dir
+map <leader>cd :cd %:p:h<cr>
 
 colorscheme gruvbox
 
@@ -222,3 +292,14 @@ fu! <SID>BufcloseCloseIt()
     execute "bdelete! ".l:currentBufNum
   endif
 endf
+"
+" if has('nvim')
+"   tnoremap <c-a> <c-\><c-n>
+"   " nmap <c-+> <c-w>+
+" endif
+if has('nvim')
+  let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+  " Hack to get C-h working in neovim
+  " nmap <BS> <C-W>h
+  tnoremap <Esc> <C-\><C-n>
+endif
