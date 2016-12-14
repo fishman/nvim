@@ -13,17 +13,25 @@ call dein#begin('/home/timebomb/.config/nvim')
 " Required:
 call dein#add('Shougo/dein.vim')
 
+call dein#add('reedes/vim-pencil')
+
+call dein#add('othree/yajs.vim')
+call dein#add('mxw/vim-jsx')
+call dein#add('HerringtonDarkholme/yats.vim')
+
 call dein#add('jceb/vim-orgmode')
 call dein#add('mattn/calendar-vim')
 call dein#add('vim-scripts/SyntaxRange')
 call dein#add('vim-scripts/utl.vim')
 call dein#add('chrisbra/NrrwRgn')
 call dein#add('Matt-Deacalion/vim-systemd-syntax')
+call dein#add('kassio/neoterm')
 
 call dein#add('godlygeek/tabular')
 call dein#add('plasticboy/vim-markdown')
 " call dein#add('rhysd/nyaovim-markdown-preview')
 
+call dein#add('airblade/vim-gitgutter')
 call dein#add('tpope/vim-speeddating')
 call dein#add('tpope/vim-repeat')
 call dein#add('tpope/vim-surround')
@@ -32,8 +40,12 @@ call dein#add('tpope/vim-fugitive')
 call dein#add('tpope/vim-rhubarb')
 call dein#add('tpope/vim-endwise')
 call dein#add('tpope/vim-vinegar')
+
 call dein#add('tpope/vim-rails')
+call dein#add('tpope/vim-eunuch')
 call dein#add('vim-ruby/vim-ruby')
+call dein#add('jgdavey/vim-blockle')
+
 call dein#add('majutsushi/tagbar')
 
 call dein#add('scrooloose/nerdtree')
@@ -45,9 +57,12 @@ call dein#add('Shougo/neosnippet-snippets')
 
 call dein#add('Shougo/deoplete.nvim')
 call dein#add('zchee/deoplete-clang')
-" call dein#add('zchee/deoplete-jedi')
+call dein#add('mhartington/deoplete-typescript')
+call dein#add('zchee/deoplete-jedi')
 " call dein#add('carlitux/deoplete-ternjs')
-" call dein#add('vhakulinen/neovim-intellij-complete-deoplete')
+" call dein#add('ternjs/tern_for_vim')
+
+call dein#add('vhakulinen/neovim-intellij-complete-deoplete')
 
 call dein#add('morhetz/gruvbox')
 
@@ -76,13 +91,30 @@ if dein#check_install()
 endif
 
 "End dein Scripts-------------------------
+"
+map Q gq
+                        " do not use Ex-mode, use Q for formatting
+set history=400         " lines of Ex commands, search history ...
+set browsedir=buffer    " use the directory of the related buffer
+" set clipboard+=unnamed  " use register '*' for all y, d, c, p ops
+set isk+=$,%,#          " none of these should be word dividers
+set autoread            " auto read when a file is changed outside
+set confirm             " raise a confirm dialog for changed buffer
+set fenc=utf-8          " character encoding for file of the buffer
+set fencs=ucs-bom,utf-8,gb18030,gbk,gb2312,cp936
+set timeoutlen=200      " Time to wait after ESC (default causes an annoying delay)
+filetype plugin indent on      " enable filetype plugin
+
+if $TERM != "linux" && $TERM != "screen"  " && $TERM != 'rxvt-unicode'
+  set mouse=a           " except screen & SecureCRT's linux terminal
+endif
 set showcmd             " Show (partial) command in status line.
 set showmatch           " Show matching brackets.
 set showmode            " Show current mode.
 set ruler               " Show the line and column numbers of the cursor.
 set number              " Show the line numbers on the left side.
 set formatoptions+=o    " Continue comment marker in new lines.
-set textwidth=0         " Hard-wrap long lines as you type them.
+set textwidth=80        " Hard-wrap long lines as you type them.
 set expandtab           " Insert spaces when TAB is pressed.
 set tabstop=2           " Render TABs using this many spaces.
 set shiftwidth=2        " Indentation amount for < and > commands.
@@ -161,6 +193,8 @@ set background=dark
 " Markdown
 let g:vim_markdown_math = 1
 
+let g:deoplete#enable_at_startup = 1
+
 let g:airline#extensions#tabline#enabled = 2
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#left_sep = ' '
@@ -184,7 +218,6 @@ let g:neomake_c_lint_maker = {
 
 autocmd BufWritePost *.py,*.js,*.rs Neomake
 let g:neomake_javascript_enabled_makers = ['eslint']
-
 
 " Use deoplete.
 let g:deoplete#enable_at_startup = 1
@@ -223,7 +256,10 @@ let g:fzf_command_prefix = 'Fzf'
 noremap <f8> :FzfAg<CR>
 noremap <silent> <leader>p/ :FzfAg<CR>
 noremap <silent> <leader>t :FzfAg<CR>
+noremap <silent> <leader>pf :FzfAg<CR>
 noremap <silent> <leader>fr :FZFMru<CR>
+noremap <silent> <leader>bs :FzfBuffers<CR>
+noremap <silent> <leader>tS :FzfColors<CR>
 
 map <leader>bd :Bclose<cr>
 map <leader>bw :bw<cr>
@@ -237,12 +273,68 @@ imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
 xmap <C-k>     <Plug>(neosnippet_expand_target)
 
+" neoterm
+let g:neoterm_position = 'horizontal'
+let g:neoterm_automap_keys = ',tt'
+
+nnoremap <silent> <f10> :TREPLSendFile<cr>
+nnoremap <silent> <f9> :TREPLSendLine<cr>
+vnoremap <silent> <f9> :TREPLSendSelection<cr>
+
+" run set test lib
+nnoremap <silent> ,rt :call neoterm#test#run('all')<cr>
+nnoremap <silent> ,rf :call neoterm#test#run('file')<cr>
+nnoremap <silent> ,rn :call neoterm#test#run('current')<cr>
+nnoremap <silent> ,rr :call neoterm#test#rerun()<cr>
+
+" Useful maps
+" hide/close terminal
+nnoremap <silent> ,th :call neoterm#close()<cr>
+" clear terminal
+nnoremap <silent> ,tl :call neoterm#clear()<cr>
+" kills the current job (send a <c-c>)
+nnoremap <silent> ,tc :call neoterm#kill()<cr>
+
+" Rails commands
+command! Troutes :T rake routes
+command! -nargs=+ Troute :T rake routes | grep <args>
+command! Tmigrate :T rake db:migrate
+
+" Git commands
+command! -nargs=+ Tg :T git <args><Paste>
+
+""""""""""""
+" tern
+""""""""""""
+" Use deoplete.
+let g:tern_request_timeout = 1
+let g:tern_show_signature_in_pum = '0'  " This do disable full signature type on autocomplete
+
+"Add extra filetypes
+let g:tern#filetypes = [
+                \ 'jsx',
+                \ 'javascript.jsx',
+                \ 'vue',
+                \ ]
+
 augroup development
     autocmd!
 
     autocmd Filetype org nmap <buffer> <A-Left>  :hello<cr>
     autocmd Filetype org nmap <buffer> <A-Right> :hello<cr>
 augroup END
+
+augroup pencil
+  autocmd!
+  autocmd FileType markdown,mkd call pencil#init()
+  autocmd FileType text         call pencil#init()
+  " autocmd FileType markdown,mkd call pencil#init()
+  "                           \ | call lexical#init()
+  "                           \ | call litecorrect#init()
+  "                           \ | call textobj#quote#init()
+  "                           \ | call textobj#sentence#init()
+" augroup END
+
 
 " SuperTab like snippets' behavior.
 imap <expr><TAB>
@@ -254,7 +346,7 @@ smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
 
 " For conceal markers.
 if has('conceal')
-  set conceallevel=2 concealcursor=nv
+  set conceallevel=2 " concealcursor=nv
 endif
 
 	" Enable snipMate compatibility feature.
@@ -293,13 +385,30 @@ fu! <SID>BufcloseCloseIt()
   endif
 endf
 "
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Editing Mappings Etc: {{{1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" remap Vim 0
+map 0 ^
+map <A-i> i <esc>r
+
+" edit text in quotes
+nmap X ci"
+
+" move a line of text using control
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+" }}}
+"
+
 " if has('nvim')
 "   tnoremap <c-a> <c-\><c-n>
 "   " nmap <c-+> <c-w>+
 " endif
-if has('nvim')
-  let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-  " Hack to get C-h working in neovim
-  " nmap <BS> <C-W>h
-  tnoremap <Esc> <C-\><C-n>
-endif
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" Hack to get C-h working in neovim
+" nmap <BS> <C-W>h
+tnoremap <Esc> <C-\><C-n>
