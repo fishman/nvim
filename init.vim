@@ -40,6 +40,7 @@ call dein#add('tpope/vim-fugitive')
 call dein#add('tpope/vim-rhubarb')
 call dein#add('tpope/vim-endwise')
 call dein#add('tpope/vim-vinegar')
+call dein#add('tpope/vim-dispatch')
 
 call dein#add('tpope/vim-rails')
 call dein#add('tpope/vim-eunuch')
