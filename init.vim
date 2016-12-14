@@ -4,10 +4,10 @@ if &compatible
 endif
 
 " Required:
-set runtimepath+=/home/timebomb/.config/nvim/repos/github.com/Shougo/dein.vim
+set runtimepath+=$HOME/.config/nvim/repos/github.com/Shougo/dein.vim
 
 " Required:
-call dein#begin('/home/timebomb/.config/nvim')
+call dein#begin('$HOME/.config/nvim')
 
 " Let dein manage dein
 " Required:
