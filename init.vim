@@ -189,7 +189,9 @@ set laststatus=2        " always show the status line
 set ffs=unix,dos,mac    " behaves good under both linux/windows
 nmap <leader>fd :se ff=dos<cr>
 nmap <leader>fu :se ff=unix<cr>
+
 set background=dark
+colorscheme gruvbox
 
 " Markdown
 let g:vim_markdown_math = 1
@@ -380,7 +382,8 @@ map <F2> :%s/\s*$//g<cr>:noh<cr>''
 " switch to current dir
 map <leader>cd :cd %:p:h<cr>
 
-colorscheme gruvbox
+map <silent> <leader>` <ESC>:QFix<cr>
+imap <silent> <leader>` <ESC>:QFix<cr>
 
 " don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
@@ -401,7 +404,40 @@ fu! <SID>BufcloseCloseIt()
     execute "bdelete! ".l:currentBufNum
   endif
 endf
-"
+
+function! ToggleSuperpaste()
+  if exists("g:superpaste_on")
+    unlet g:superpaste_on
+    iunmap <C-V>
+    vunmap <C-C>
+  else
+    let g:superpaste_on = 1
+    " super paste
+    inoremap <C-v> <esc>:set paste<cr>a<C-R>*<esc>:set nopaste<cr>
+    " copy into clipboard
+    vnoremap <C-C> "+y
+  endif
+endfunction
+
+call ToggleSuperpaste()
+
+" toggles the quickfix window.
+command! -bang -nargs=? QFix call QFixToggle(<bang>0)
+function! QFixToggle(forced)
+  if exists("g:qfix_win") && a:forced == 0
+    cclose
+  else
+    execute "copen 10"
+  endif
+endfunction
+
+" used to track the quickfix window
+augroup QFixToggle
+ autocmd!
+ autocmd BufWinEnter quickfix let g:qfix_win = bufnr("$")
+ autocmd BufWinLeave * if exists("g:qfix_win") && expand("<abuf>") == g:qfix_win | unlet! g:qfix_win | endif
+augroup END
+
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Editing Mappings Etc: {{{1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
