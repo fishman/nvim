@@ -228,6 +228,8 @@ let mapleader = " "     " set mapleader, then <leader> will be ,
 let g:mapleader = " "
 let maplocalleader = ","     " set mapleader, then <leader> will be ,
 
+nmap <silent> <leader>bn :bn<cr>
+nmap <silent> <leader>bp :bp<cr>
 map <right> :bn<cr>
 map <left> :bp<cr>
 nnoremap <up> gk
@@ -254,6 +256,13 @@ nmap <F4> :TagbarToggle<cr>
 imap <F4> <C-O>:TagbarToggle<cr>
 
 let g:fzf_command_prefix = 'Fzf'
+let g:fzf_layout = { 'down': '~30%' }
+" This is the default extra key bindings
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
+
 noremap <f8> :FzfAg<CR>
 noremap <silent> <leader>p/ :FzfAg<CR>
 noremap <silent> <leader>t :FzfAg<CR>
