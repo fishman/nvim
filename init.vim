@@ -190,6 +190,11 @@ set ffs=unix,dos,mac    " behaves good under both linux/windows
 nmap <leader>fd :se ff=dos<cr>
 nmap <leader>fu :se ff=unix<cr>
 
+" For conceal markers.
+if has('conceal')
+  set conceallevel=2 " concealcursor=nv
+endif
+
 set background=dark
 colorscheme gruvbox
 
@@ -363,11 +368,6 @@ imap <expr><TAB>
 smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
  \ "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
 
-" For conceal markers.
-if has('conceal')
-  set conceallevel=2 " concealcursor=nv
-endif
-
 	" Enable snipMate compatibility feature.
 	" let g:neosnippet#enable_snipmate_compatibility = 1
 " use jk for esc
@@ -385,6 +385,47 @@ map <leader>cd :cd %:p:h<cr>
 map <silent> <leader>` <ESC>:QFix<cr>
 imap <silent> <leader>` <ESC>:QFix<cr>
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Editing Mappings Etc: {{{1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" remap Vim 0
+map 0 ^
+map <A-i> i <esc>r
+
+" edit text in quotes
+nmap X ci"
+
+" move a line of text using control
+nmap <M-j> mz:m+<cr>`z
+nmap <M-k> mz:m-2<cr>`z
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+" }}}
+"
+" GitGutter
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
+
+nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
+nmap <Leader>ha <Plug>GitGutterStageHunk
+nmap <Leader>hr <Plug>GitGutterUndoHunk
+nmap <Leader>hv <Plug>GitGutterPreviewHunk
+
+" if has('nvim')
+"   tnoremap <c-a> <c-\><c-n>
+"   " nmap <c-+> <c-w>+
+" endif
+let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
+let $NVIM_TUI_ENABLE_TRUE_COLOR=1
+" Hack to get C-h working in neovim
+" nmap <BS> <C-W>h
+tnoremap <Esc> <C-\><C-n>
+" }}}
+
+""""""""""""""""""""""""""""""""""""
+"" Functions {{{1
+""""""""""""""""""""""""""""""""""""
 " don't close window, when deleting a buffer
 command! Bclose call <SID>BufcloseCloseIt()
 
@@ -437,40 +478,4 @@ augroup QFixToggle
  autocmd BufWinEnter quickfix let g:qfix_win = bufnr("$")
  autocmd BufWinLeave * if exists("g:qfix_win") && expand("<abuf>") == g:qfix_win | unlet! g:qfix_win | endif
 augroup END
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Editing Mappings Etc: {{{1
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" remap Vim 0
-map 0 ^
-map <A-i> i <esc>r
-
-" edit text in quotes
-nmap X ci"
-
-" move a line of text using control
-nmap <M-j> mz:m+<cr>`z
-nmap <M-k> mz:m-2<cr>`z
-vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
-vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
-" }}}
-"
-" GitGutter
-let g:gitgutter_realtime = 0
-let g:gitgutter_eager = 0
-
-nmap ]h <Plug>GitGutterNextHunk
-nmap [h <Plug>GitGutterPrevHunk
-nmap <Leader>ha <Plug>GitGutterStageHunk
-nmap <Leader>hr <Plug>GitGutterUndoHunk
-nmap <Leader>hv <Plug>GitGutterPreviewHunk
-
-" if has('nvim')
-"   tnoremap <c-a> <c-\><c-n>
-"   " nmap <c-+> <c-w>+
-" endif
-let $NVIM_TUI_ENABLE_CURSOR_SHAPE=1
-let $NVIM_TUI_ENABLE_TRUE_COLOR=1
-" Hack to get C-h working in neovim
-" nmap <BS> <C-W>h
-tnoremap <Esc> <C-\><C-n>
+"}}}
