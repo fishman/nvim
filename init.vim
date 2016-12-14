@@ -260,6 +260,7 @@ noremap <silent> <leader>pf :FzfAg<CR>
 noremap <silent> <leader>fr :FZFMru<CR>
 noremap <silent> <leader>bs :FzfBuffers<CR>
 noremap <silent> <leader>tS :FzfColors<CR>
+noremap <silent> <leader>gs :Gstatus<CR>
 
 map <leader>bd :Bclose<cr>
 map <leader>bw :bw<cr>
@@ -402,6 +403,15 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 " }}}
 "
+" GitGutter
+let g:gitgutter_realtime = 0
+let g:gitgutter_eager = 0
+
+nmap ]h <Plug>GitGutterNextHunk
+nmap [h <Plug>GitGutterPrevHunk
+nmap <Leader>ha <Plug>GitGutterStageHunk
+nmap <Leader>hr <Plug>GitGutterUndoHunk
+nmap <Leader>hv <Plug>GitGutterPreviewHunk
 
 " if has('nvim')
 "   tnoremap <c-a> <c-\><c-n>
