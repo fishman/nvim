@@ -325,6 +325,12 @@ augroup development
     autocmd Filetype org nmap <buffer> <A-Right> :hello<cr>
 augroup END
 
+augroup fugitive
+    autocmd!
+
+    autocmd Filetype gitcommit nmap <buffer> Pp  :Gpush<cr>
+augroup END
+
 augroup pencil
   autocmd!
   autocmd FileType markdown,mkd call pencil#init()
