@@ -16,6 +16,7 @@ call dein#add('Shougo/dein.vim')
 call dein#add('reedes/vim-pencil')
 
 call dein#add('othree/yajs.vim')
+call dein#add('pangloss/vim-javascript')
 call dein#add('mxw/vim-jsx')
 call dein#add('HerringtonDarkholme/yats.vim')
 
@@ -32,11 +33,13 @@ call dein#add('plasticboy/vim-markdown')
 " call dein#add('rhysd/nyaovim-markdown-preview')
 
 call dein#add('airblade/vim-gitgutter')
+call dein#add('gregsexton/gitv')
+call dein#add('tpope/vim-fugitive')
+
 call dein#add('tpope/vim-speeddating')
 call dein#add('tpope/vim-repeat')
 call dein#add('tpope/vim-surround')
 call dein#add('tpope/vim-commentary')
-call dein#add('tpope/vim-fugitive')
 call dein#add('tpope/vim-rhubarb')
 call dein#add('tpope/vim-endwise')
 call dein#add('tpope/vim-vinegar')
@@ -203,6 +206,8 @@ let g:vim_markdown_math = 1
 
 let g:deoplete#enable_at_startup = 1
 
+let g:jsx_ext_required = 0
+
 let g:airline#extensions#tabline#enabled = 2
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline#extensions#tabline#left_sep = ' '
@@ -282,10 +287,34 @@ noremap <silent> <leader>gs :Gstatus<CR>
 map <leader>bd :Bclose<cr>
 map <leader>bw :bw<cr>
 
+" set H and L to first and last character of line
+nnoremap H ^
+nnoremap L $
+
+" yank to end of line
+nnoremap Y y$
+
+" tag next prev
+nmap <leader>tn :tn<cr>
+nmap <leader>tp :tp<cr>
+
+" scroll the viewport faster
+nnoremap <C-e> 3<C-e>
+nnoremap <C-y> 3<C-y>
+
+"Vertical split then hop to new buffer
+noremap ,v :vsp<CR><C-W><C-W>
+
+" smart way to close windows
+map <leader>wc <C-W>c
+
 nnoremap <C-h> <C-w>h " only C-h does not work.
 nnoremap <C-j> <C-w>j
 nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
+
+nnoremap <C-left>  :tabp<CR>
+nnoremap <C-right> :tabn<CR>
 
 imap <C-k>     <Plug>(neosnippet_expand_or_jump)
 smap <C-k>     <Plug>(neosnippet_expand_or_jump)
