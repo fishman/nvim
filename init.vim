@@ -36,6 +36,7 @@ call dein#add('airblade/vim-gitgutter')
 call dein#add('gregsexton/gitv')
 call dein#add('tpope/vim-fugitive')
 
+call dein#add('tpope/vim-projectionist')
 call dein#add('tpope/vim-speeddating')
 call dein#add('tpope/vim-repeat')
 call dein#add('tpope/vim-surround')
@@ -63,8 +64,8 @@ call dein#add('Shougo/deoplete.nvim')
 call dein#add('zchee/deoplete-clang')
 call dein#add('mhartington/deoplete-typescript')
 call dein#add('zchee/deoplete-jedi')
-" call dein#add('carlitux/deoplete-ternjs')
-" call dein#add('ternjs/tern_for_vim')
+call dein#add('carlitux/deoplete-ternjs')
+call dein#add('ternjs/tern_for_vim')
 
 call dein#add('vhakulinen/neovim-intellij-complete-deoplete')
 
@@ -363,6 +364,9 @@ let g:tern#filetypes = [
                 \ 'javascript.jsx',
                 \ 'vue',
                 \ ]
+
+let g:tern#command = ["tern"]
+let g:tern#arguments = ["--persistent"]
 
 augroup development
     autocmd!
