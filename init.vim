@@ -65,14 +65,14 @@ call dein#add('zchee/deoplete-clang')
 call dein#add('mhartington/deoplete-typescript')
 call dein#add('zchee/deoplete-jedi')
 call dein#add('carlitux/deoplete-ternjs')
-call dein#add('ternjs/tern_for_vim')
+" call dein#add('ternjs/tern_for_vim')
 
-call dein#add('vhakulinen/neovim-intellij-complete-deoplete')
-
+" call dein#add('vhakulinen/neovim-intellij-complete-deoplete')
 call dein#add('morhetz/gruvbox')
 
 " You can specify revision/branch/tag.
-call dein#add('Shougo/vimshell', { 'rev': '3787e5' })
+" call dein#add('Shougo/vimshell', { 'rev': '3787e5' })
+call dein#add('Shougo/vimshell')
 
 call dein#add('junegunn/fzf', { 'build': './install --all', 'merged': 0 })
 call dein#add('junegunn/fzf.vim', { 'depends': 'fzf' })
@@ -278,8 +278,8 @@ let g:fzf_action = {
 
 noremap <f8> :FzfAg<CR>
 noremap <silent> <leader>p/ :FzfAg<CR>
-noremap <silent> <leader>t :FzfAg<CR>
-noremap <silent> <leader>pf :FzfAg<CR>
+noremap <silent> <leader>t :FzfFiles<CR>
+noremap <silent> <leader>pf :FzfFiles<CR>
 noremap <silent> <leader>fr :FZFMru<CR>
 noremap <silent> <leader>bs :FzfBuffers<CR>
 noremap <silent> <leader>tS :FzfColors<CR>
